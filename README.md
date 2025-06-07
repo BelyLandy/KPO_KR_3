@@ -11,13 +11,24 @@
 В корне проекта, выполните в терминале:
 
 ```
-
 # Сборка и запуск стека.
 docker compose up --build
 
 # Остановка и удаление томов.
 docker compose down -v
 ```
+
+![image](https://github.com/user-attachments/assets/5bef5e2b-7efe-4508-bd54-a679467e7214)
+
+После запуска контейнеров можно открыть Swagger на 8001 и проверить работу решения.
+
+| URL                                                      | Сервис                        |
+| -------------------------------------------------------- | ----------------------------- |
+| [http://localhost:8000/docs](http://localhost:8001/docs) | Orders Service                |
+| [http://localhost:8002/docs](http://localhost:8002/docs) | Payment Service               |
+
+![image](https://github.com/user-attachments/assets/d6c7a75e-34c4-4974-9427-3ec949155c32)
+![image](https://github.com/user-attachments/assets/d8f66d66-3592-4036-ad01-34ad3d5f8a2b)
 
 ---
 
