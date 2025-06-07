@@ -25,10 +25,10 @@ docker compose down -v
 | URL                                                      | Сервис                        |
 | -------------------------------------------------------- | ----------------------------- |
 | [http://localhost:8000/docs](http://localhost:8001/docs) | Orders Service                |
-| [http://localhost:8002/docs](http://localhost:8002/docs) | Payment Service               |
+| [http://localhost:8002/docs](http://localhost:8002/docs) | Payments Service               |
 
 ![image](https://github.com/user-attachments/assets/d6c7a75e-34c4-4974-9427-3ec949155c32)
-![image](https://github.com/user-attachments/assets/d8f66d66-3592-4036-ad01-34ad3d5f8a2b)
+![image](https://github.com/user-attachments/assets/fde1d0d4-d96e-41ec-8144-621f3232e4dd)
 
 ---
 
