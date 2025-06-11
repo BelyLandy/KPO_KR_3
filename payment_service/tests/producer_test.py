@@ -6,13 +6,6 @@ from src.infra.services.producer import Producer
 
 @pytest.mark.asyncio
 async def test_send_success_commits_transaction():
-    """
-    Проверяем, что при успешной отправке:
-    1) begin_transaction вызывается,
-    2) send_and_wait вызывается с правильными аргументами,
-    3) commit_transaction вызывается,
-    4) abort_transaction не вызывается.
-    """
     fake_producer = AsyncMock()
     fake_producer.begin_transaction = AsyncMock()
     fake_producer.send_and_wait = AsyncMock()
@@ -44,11 +37,6 @@ async def test_send_success_commits_transaction():
 
 @pytest.mark.asyncio
 async def test_send_failure_aborts_transaction():
-    """
-    Если send_and_wait бросает исключение:
-    1) abort_transaction вызывается,
-    2) commit_transaction не вызывается.
-    """
     fake_producer = AsyncMock()
     fake_producer.begin_transaction = AsyncMock()
     fake_producer.send_and_wait = AsyncMock(side_effect=RuntimeError("send failed"))

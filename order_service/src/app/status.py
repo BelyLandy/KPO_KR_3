@@ -1,7 +1,7 @@
 from enum import Enum
 
 class Status(Enum):
-    """Возможные статусы заказа."""
+    """ Возможные статусы заказа. """
 
     NEW: str = "new"
     FINISHED: str = "finished"

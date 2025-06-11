@@ -5,9 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Account(BaseModel):
-    """
-    Данные аккаунта пользователя с информацией о балансе.
-    """
+    """ Данные аккаунта пользователя с информацией о балансе. """
     user_id: UUID = Field(
         ...,
         description="Уникальный идентификатор пользователя"

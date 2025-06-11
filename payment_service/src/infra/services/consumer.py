@@ -5,9 +5,7 @@ from src.infra.postgres_repository import PostgresRepository
 
 
 class Consumer:
-    """
-    Консюмер Kafka, который читает сообщения и сохраняет их в таблицу inbox.
-    """
+    """ Консюмер Kafka, который читает сообщения и сохраняет их в таблицу inbox. """
 
     def __init__(
         self,
@@ -17,13 +15,6 @@ class Consumer:
         transactional_id: str,
         repository: PostgresRepository
     ) -> None:
-        """
-        :param bootstrap_servers: адрес(а) Kafka-брокера
-        :param topic: название топика для чтения
-        :param group_id: идентификатор группы консюмеров
-        :param transactional_id: id для транзакционного продьюсера
-        :param repository: репозиторий для записи в базу
-        """
         self._topic = topic
         self._group_id = group_id
         self._repo = repository
@@ -42,20 +33,17 @@ class Consumer:
         )
 
     async def start(self) -> None:
-        """Запустить Kafka consumer и producer."""
+        """ Запустить Kafka consumer и producer. """
         await self._consumer.start()
         await self._producer.start()
 
     async def stop(self) -> None:
-        """Остановить consumer и producer."""
+        """ Остановить consumer и producer. """
         await self._consumer.stop()
         await self._producer.stop()
 
     async def poll_and_process(self, handler) -> None:
-        """
-        Циклически опрашивает топик, обрабатывает сообщения через handler
-        и сохраняет их в payment_inbox.
-        """
+        """ Циклически опрашивает топик, обрабатывает сообщения через handler и сохраняет их в payment_inbox. """
         while True:
             batch = await self._consumer.getmany(timeout_ms=1000)
             if not batch:

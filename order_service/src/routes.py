@@ -13,9 +13,7 @@ from src.app.order import Order
 
 
 class OrderCreateRequest(BaseModel):
-    """
-    Тело запроса для создания нового заказа.
-    """
+    """ Тело запроса для создания нового заказа. """
     user_id: UUID
     amount: Decimal
     description: Optional[str] = None
@@ -70,9 +68,7 @@ async def get_order_status(
     order_id: UUID,
     service: OrderService = Depends(Provide[Container.order_service]),
 ):
-    """
-    Получить статус заказа по его UUID.
-    """
+    """ Получить статус заказа по его UUID. """
     status = await service.get_order_status(order_id)
     if status is None:
         raise HTTPException(status_code=404, detail="Order not found")

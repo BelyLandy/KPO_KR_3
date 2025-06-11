@@ -10,51 +10,41 @@ from src.infra.services.outbox_publisher import OutboxPublisher
 
 
 class Container(containers.DeclarativeContainer):
-    """
-    DI-контейнер для Payment Service:
-    настраивает Kafka, БД, репозитории и сервисы.
-    """
+    """ DI-контейнер для Payment Service. """
     wiring_config = containers.WiringConfiguration(
         modules=["src.routes"]
     )
 
-    # Kafka Producer с транзакциями
     kafka_producer = providers.Singleton(
         Producer,
         bootstrap_servers="broker:9092",
         transactional_id="payment_status_transactional_id",
     )
 
-    # Асинхронный движок базы данных
     db_engine = providers.Singleton(
         get_engine,
         database_url="postgresql+asyncpg://user:password@payments_db:5432/payment_db",
     )
 
-    # Фабрика асинхронных сессий SQLAlchemy
     session_factory = providers.Singleton(
         get_session_maker,
         engine=db_engine,
     )
 
-    # Каждый вызов дает новую сессию
     db_session = providers.Factory(
         lambda session_factory=session_factory(): session_factory()
     )
 
-    # Репозиторий для операций с платежами
     payment_repository = providers.Factory(
         PostgresRepository,
         session=db_session,
     )
 
-    # Бизнес-сервис для работы с аккаунтами и платежами
     payment_service = providers.Factory(
         PaymentService,
         repository=payment_repository,
     )
 
-    # Kafka Consumer для обработки событий заказов
     kafka_consumer = providers.Singleton(
         Consumer,
         bootstrap_servers="broker:9092",
@@ -64,13 +54,11 @@ class Container(containers.DeclarativeContainer):
         repository=payment_repository,
     )
 
-    # Фоновый воркер для обработки inbox-событий
     worker_service = providers.Singleton(
         Worker,
         repository=payment_repository,
     )
 
-    # Публикатор из outbox в Kafka
     outbox_publisher = providers.Singleton(
         OutboxPublisher,
         broker=kafka_producer,

@@ -12,14 +12,9 @@ from src.app.status import Status
 
 
 class PostgresRepository:
-    """
-    Репозиторий для работы с заказами и таблицей outbox в Postgres через SQLAlchemy AsyncSession.
-    """
+    """ Репозиторий для работы с заказами и таблицей outbox в Postgres через SQLAlchemy AsyncSession. """
 
     def __init__(self, session: AsyncSession) -> None:
-        """
-        :param session: Асинхронная сессия SQLAlchemy
-        """
         self._session = session
 
     async def create_order(
@@ -28,15 +23,7 @@ class PostgresRepository:
         amount: Decimal,
         description: Optional[str] = None
     ) -> OrderModel:
-        """
-        Создает запись заказа и соответствующую запись в outbox.
-
-        :param user_id: UUID пользователя
-        :param amount: Сумма заказа
-        :param description: Описание (опционально)
-        :return: Созданный OrderModel
-        """
-        # Подготовка и сохранение заказа
+        """ Создает запись заказа и соответствующую запись в outbox. """
         order = OrderModel(
             id=uuid.uuid4(),
             user_id=user_id,
@@ -47,7 +34,6 @@ class PostgresRepository:
         self._session.add(order)
         await self._session.flush()
 
-        # Запись события в outbox
         outbox = OutboxModel(
             id=uuid.uuid4(),
             event_type="order_created",
@@ -65,12 +51,7 @@ class PostgresRepository:
         return order
 
     async def get_orders(self, user_id: UUID) -> List[Dict]:
-        """
-        Возвращает все заказы указанного пользователя.
-
-        :param user_id: UUID пользователя
-        :return: Список словарей с полями заказа
-        """
+        """ Возвращает все заказы указанного пользователя. """
         stmt = select(
             OrderModel.id,
             OrderModel.user_id,
@@ -83,11 +64,7 @@ class PostgresRepository:
         return result.mappings().all()
 
     async def get_orders_outbox(self) -> List[OutboxModel]:
-        """
-        Получает все необработанные записи из таблицы outbox, упорядоченные по времени создания.
-
-        :return: Список моделей OutboxModel
-        """
+        """ Получает все необработанные записи из таблицы outbox, упорядоченные по времени создания. """
         stmt = (
             select(OutboxModel)
             .where(OutboxModel.processed.is_(False))
@@ -97,12 +74,7 @@ class PostgresRepository:
         return result.scalars().all()
 
     async def get_order_status(self, order_id: UUID) -> Optional[Dict[str, str]]:
-        """
-        Читает статус заказа по его UUID.
-
-        :param order_id: UUID заказа
-        :return: Словарь {"order_id": UUID, "status": str} или None
-        """
+        """ Читает статус заказа по его UUID. """
         stmt = select(OrderModel).where(OrderModel.id == order_id)
         result = await self._session.execute(stmt)
         order = result.scalar_one_or_none()
@@ -113,11 +85,7 @@ class PostgresRepository:
         return {"order_id": order.id, "status": order.status}
 
     async def update_outbox_order_status(self, outbox_id: UUID) -> None:
-        """
-        Помечает запись outbox как обработанную.
-
-        :param outbox_id: UUID записи outbox
-        """
+        """ Помечает запись outbox как обработанную. """
         stmt = (
             update(OutboxModel)
             .where(OutboxModel.id == outbox_id)
@@ -127,12 +95,7 @@ class PostgresRepository:
         await self._session.commit()
 
     async def update_order_status(self, order_id: UUID, status: str) -> None:
-        """
-        Обновляет поле status в записи заказа.
-
-        :param order_id: UUID заказа
-        :param status: Новый статус
-        """
+        """ Обновляет поле status в записи заказа. """
         stmt = (
             update(OrderModel)
             .where(OrderModel.id == order_id)

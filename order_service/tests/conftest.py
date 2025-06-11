@@ -22,9 +22,7 @@ from src.infra.postgres_repository import PostgresRepository
 
 @pytest_asyncio.fixture
 def event_loop():
-    """
-    Создает новый event loop для каждого тестового модуля.
-    """
+    """ Создает новый event loop для каждого тестового модуля. """
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
@@ -32,10 +30,7 @@ def event_loop():
 
 @pytest_asyncio.fixture
 async def in_memory_engine() -> AsyncGenerator[AsyncEngine, None]:
-    """
-    Асинхронный движок SQLite в памяти.
-    Создает все таблицы перед стартом и закрывает движок после.
-    """
+    """ Асинхронный движок SQLite в памяти. """
     engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
         echo=False,
@@ -51,10 +46,7 @@ async def in_memory_engine() -> AsyncGenerator[AsyncEngine, None]:
 async def session(
     in_memory_engine: AsyncEngine
 ) -> AsyncGenerator[AsyncSession, None]:
-    """
-    Асинхронная сессия SQLAlchemy.
-    После теста делает rollback, чтобы не сохранять изменения.
-    """
+    """ Асинхронная сессия SQLAlchemy. """
     maker = async_sessionmaker(
         bind=in_memory_engine,
         class_=AsyncSession,
@@ -67,7 +59,5 @@ async def session(
 
 @pytest.fixture
 def repository(session: AsyncSession) -> PostgresRepository:
-    """
-    Фабрика PostgresRepository для доступа к методам работы с БД.
-    """
+    """ Фабрика PostgresRepository для доступа к методам работы с БД. """
     return PostgresRepository(session=session)

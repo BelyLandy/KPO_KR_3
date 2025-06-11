@@ -6,13 +6,9 @@ from src.infra.data.base import Base
 
 
 class PaymentOutbox(Base):
-    """
-    ORM-модель для таблицы payment_outbox:
-    хранит события для последующей отправки в Kafka.
-    """
+    """ ORM-модель для таблицы payment_outbox. """
     __tablename__ = "payment_outbox"
 
-    # UUID записи outbox
     id = Column(
         PG_UUID(as_uuid=True),
         primary_key=True,
@@ -20,28 +16,24 @@ class PaymentOutbox(Base):
         comment="Уникальный идентификатор записи"
     )
 
-    # Тип события, например "PaymentRequest"
     event_type = Column(
         String,
         nullable=False,
         comment="Тип события для публикации"
     )
 
-    # Полезная нагрузка события в формате JSON
     payload = Column(
         JSON,
         nullable=False,
         comment="Данные события"
     )
 
-    # Статус события (pending/success/failed и т.п.)
     status = Column(
         String,
         nullable=False,
         comment="Текущий статус события"
     )
 
-    # Время создания записи (UTC)
     created_at = Column(
         DateTime,
         nullable=False,
@@ -49,7 +41,6 @@ class PaymentOutbox(Base):
         comment="Время создания записи"
     )
 
-    # Флаг обработки записи
     processed = Column(
         Boolean,
         nullable=False,
@@ -57,7 +48,6 @@ class PaymentOutbox(Base):
         comment="Признак отправки/обработки"
     )
 
-    # Время отложенной отправки (если необходимо)
     send_at = Column(
         DateTime,
         nullable=True,

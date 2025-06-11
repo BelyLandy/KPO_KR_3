@@ -2,19 +2,13 @@ from aiokafka import AIOKafkaProducer
 
 
 class Producer:
-    """
-    Kafka-продюсер с поддержкой транзакций и идемпотентности.
-    """
+    """ Kafka-продюсер с поддержкой транзакций и идемпотентности. """
 
     def __init__(
         self,
         bootstrap_servers: str,
         transactional_id: str
     ) -> None:
-        """
-        :param bootstrap_servers: адрес Kafka-брокеров
-        :param transactional_id: идентификатор транзакционной сессии
-        """
         self._producer = AIOKafkaProducer(
             bootstrap_servers=bootstrap_servers,
             transactional_id=transactional_id,
@@ -22,11 +16,11 @@ class Producer:
         )
 
     async def start(self) -> None:
-        """Запускает продюсер."""
+        """ Запускает продюсер. """
         await self._producer.start()
 
     async def stop(self) -> None:
-        """Останавливает продюсер."""
+        """ Останавливает продюсер. """
         await self._producer.stop()
 
     async def send(
@@ -35,13 +29,7 @@ class Producer:
         key: bytes,
         value: bytes
     ) -> None:
-        """
-        Отправляет сообщение в Kafka в рамках транзакции.
-
-        :param topic: название топика
-        :param key: ключ сообщения
-        :param value: полезная нагрузка
-        """
+        """ Отправляет сообщение в Kafka в рамках транзакции. """
         await self._producer.begin_transaction()
         try:
             print(f"Отправка в {topic}: key={key}, value={value}")

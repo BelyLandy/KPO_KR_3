@@ -7,12 +7,7 @@ from sqlalchemy.ext.asyncio import (
 
 
 def get_engine(database_url: str) -> AsyncEngine:
-    """
-    Инициализирует и возвращает асинхронный движок SQLAlchemy.
-
-    :param database_url: Строка подключения к базе данных.
-    :return: Экземпляр AsyncEngine.
-    """
+    """ Инициализирует и возвращает асинхронный движок SQLAlchemy. """
     return create_async_engine(
         database_url,
         echo=False,
@@ -21,12 +16,7 @@ def get_engine(database_url: str) -> AsyncEngine:
 
 
 def get_session_maker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
-    """
-    Создает и возвращает фабрику асинхронных сессий.
-
-    :param engine: Асинхронный движок, к которому будут привязаны сессии.
-    :return: async_sessionmaker, создающий AsyncSession с expire_on_commit=False.
-    """
+    """ Создает и возвращает фабрику асинхронных сессий. """
     return async_sessionmaker(
         bind=engine,
         class_=AsyncSession,

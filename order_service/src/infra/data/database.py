@@ -22,7 +22,7 @@ def get_session_maker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
     """
     Создает и возвращает фабрику асинхронных сессий.
     :param engine: Асинхронный движок, к которому будут привязаны сессии.
-    :return: async_sessionmaker, настраивающий AsyncSession с expire_on_commit=False.
+    :return: async_sessionmaker, настраивающий AsyncSession.
     """
     return async_sessionmaker(
         bind=engine,

@@ -8,9 +8,7 @@ from pydantic import BaseModel, Field
 from src.app.status import Status
 
 class Order(BaseModel):
-    """
-    Модель данных заказа.
-    """
+    """ Модель данных заказа. """
     id: UUID = Field(
         ...,
         description="Уникальный идентификатор заказа"

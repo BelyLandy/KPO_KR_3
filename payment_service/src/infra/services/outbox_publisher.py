@@ -7,30 +7,20 @@ from src.infra.services.producer import Producer
 
 
 class OutboxPublisher:
-    """
-    Публикует незавершённые платежи из таблицы outbox в Kafka.
-    """
+    """ Публикует незавершённые платежи из таблицы outbox в Kafka. """
 
     def __init__(
         self,
         repository: PostgresRepository,
         broker: Producer
     ) -> None:
-        """
-        :param repository: Репозиторий для работы с payment_outbox
-        :param broker: Kafka Producer для отправки сообщений
-        """
         self._repository = repository
         self._broker = broker
 
     async def _publish_pending(self) -> None:
-        """
-        Получает все необработанные записи из outbox,
-        отправляет их в Kafka и помечает как обработанные.
-        """
+        """ Получает все необработанные записи из outbox, отправляет их в Kafka и помечает как обработанные. """
         pending = await self._repository.get_payments_outbox()
         for entry in pending:
-            # Собираем тело сообщения с добавленным статусом
             message = {**entry.payload, "status": entry.status}
             try:
                 await self._broker.send(
@@ -38,16 +28,12 @@ class OutboxPublisher:
                     key=None,
                     value=json.dumps(message).encode("utf-8")
                 )
-                # Обновляем статус записи в outbox
                 await self._repository.update_outbox_payment_status(entry.id)
             except Exception as exc:
                 print(f"Ошибка при отправке платежа в Kafka: {exc}")
 
     async def run(self, interval: int = 2) -> None:
-        """
-        Запускает бесконечный цикл, публикуя очередные платежи
-        каждые `interval` секунд.
-        """
+        """ Запускает бесконечный цикл, публикуя очередные платежи каждые interval секунд. """
         await self._broker.start()
         try:
             while True:

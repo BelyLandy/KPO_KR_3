@@ -5,9 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class AccountCreate(BaseModel):
-    """
-    Запрос на создание аккаунта с указанием начального баланса.
-    """
+    """ Запрос на создание аккаунта с указанием начального баланса. """
     user_id: UUID = Field(
         ...,
         description="Уникальный UUID пользователя"
@@ -20,9 +18,7 @@ class AccountCreate(BaseModel):
 
 
 class AccountTopUp(BaseModel):
-    """
-    Запрос на пополнение баланса аккаунта.
-    """
+    """ Запрос на пополнение баланса аккаунта. """
     amount: Decimal = Field(
         ...,
         gt=0,
@@ -31,9 +27,7 @@ class AccountTopUp(BaseModel):
 
 
 class AccountRead(BaseModel):
-    """
-    Ответ с информацией об аккаунте и текущем балансе.
-    """
+    """ Ответ с информацией об аккаунте и текущем балансе. """
     user_id: UUID = Field(
         ...,
         description="UUID пользователя"

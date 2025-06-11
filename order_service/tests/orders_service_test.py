@@ -12,11 +12,7 @@ from src.app.status import Status
 
 @pytest.mark.asyncio
 async def test_create_order_success():
-    """
-    Успешное создание заказа:
-    - возвращается результат из репозитория
-    - метод репозитория вызывается с корректными аргументами
-    """
+    """ Успешное создание заказа. """
     user_id = uuid.uuid4()
     amount = Decimal("50.00")
     description = "Test order"
@@ -28,7 +24,6 @@ async def test_create_order_success():
         "status": Status.NEW.value
     }
 
-    # Мокаем репозиторий и его метод create_order
     mock_repo = AsyncMock()
     mock_repo.create_order.return_value = fake_order
 

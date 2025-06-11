@@ -7,13 +7,9 @@ from src.infra.data.base import Base
 
 
 class Account(Base):
-    """
-    ORM-модель для таблицы аккаунтов.
-    Хранит привязку пользователя к его балансу.
-    """
+    """ ORM-модель для таблицы аккаунтов. """
     __tablename__ = "accounts"
 
-    # UUID пользователя — первичный ключ
     user_id = Column(
         PG_UUID(as_uuid=True),
         primary_key=True,
@@ -21,7 +17,6 @@ class Account(Base):
         comment="UUID пользователя"
     )
 
-    # Текущий баланс пользователя
     balance = Column(
         Numeric(precision=18, scale=2),
         nullable=False,
